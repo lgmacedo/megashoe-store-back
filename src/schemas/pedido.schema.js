@@ -8,11 +8,10 @@ function validarIdProduto(value) {
 
 const pedidoProdutoSchema = Joi.object({
   idProduto: Joi.string().custom(validarIdProduto).required(),
-  quantidade: Joi.number().positive().integer().required(),
+  quantidadeSelecionada: Joi.number().positive().integer().required(),
 });
 
 const pedidoSchema = Joi.object({
-  idUsuario: Joi.string().required(),
   produtos: Joi.array().min(1).items(pedidoProdutoSchema).required(),
 });
 
