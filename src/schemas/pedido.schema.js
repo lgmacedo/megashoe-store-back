@@ -6,14 +6,14 @@ function validarIdProduto(value) {
   return value;
 }
 
-const orderProdutoSchema = Joi.object({
+const pedidoProdutoSchema = Joi.object({
   idProduto: Joi.string().custom(validarIdProduto).required(),
   quantidade: Joi.number().positive().integer().required(),
 });
 
-const orderSchema = Joi.object({
+const pedidoSchema = Joi.object({
   idUsuario: Joi.string().required(),
-  produtos: Joi.array().min(1).items(orderProdutoSchema).required(),
+  produtos: Joi.array().min(1).items(pedidoProdutoSchema).required(),
 });
 
-export default orderSchema;
+export default pedidoSchema;
