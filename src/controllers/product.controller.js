@@ -40,7 +40,7 @@ export async function checarDisponibilidadeProduto(req, res) {
 }
 
 export async function getProdutosComIds(req, res) {
-  const { ids } = req.body;
+  const { ids } = req.query;
   if (!Array.isArray(ids) || ids.length === 0) return res.sendStatus(422);
   const objectIds = ids
     .filter((id) => ObjectId.isValid(id))
