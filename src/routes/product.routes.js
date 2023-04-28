@@ -1,13 +1,15 @@
 import { Router } from "express";
 import {
-  getProdutos,
-  addToCart,
+  getTodosProdutos,
+  checarDisponibilidadeProduto,
   getProduto,
+  getProdutosComIds,
 } from "../controllers/product.controller.js";
 
 const productRoutes = Router();
-productRoutes.get("/produtos", getProdutos);
-productRoutes.post("/pedidos", addToCart);
-productRoutes.get("/detalhes/:idProduto", getProduto);
+productRoutes.get("/produtos", getTodosProdutos);
+productRoutes.get("/produtos/muitos", getProdutosComIds);
+productRoutes.get("/produtos/:idProduto", getProduto);
+productRoutes.get("/produtos/checar/:idProduto", checarDisponibilidadeProduto);
 
 export default productRoutes;
