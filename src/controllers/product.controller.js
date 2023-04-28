@@ -10,8 +10,18 @@ export async function getProdutos(req, res) {
   }
 }
 
+export async function getProduto(req, res){
+    const {idProduto} = req.params;
+    try{
+        const produto = await db.collection("produtos").findOne({_id: new ObjectId(idProduto)});
+        if(!produto) return res.status(404).send("Produto não encontrado");
+        return res.status(200).send(produto);
+    }catch(err){
+        return res.status(500).send("Erro inesperado. Tente novamente.");
+    }
+}
+
 export async function addToCart(req, res) {
-  console.log("entrou!");
   const { id } = req.body;
   try {
     const produto = await db
