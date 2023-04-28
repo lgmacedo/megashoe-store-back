@@ -8,7 +8,7 @@ import pedidoSchema from "../schemas/pedido.schema.js";
 
 const pedidoRoutes = Router();
 
-pedidoRoutes.get("/order", listarPedidos);
-pedidoRoutes.post("/order", validateSchema(pedidoSchema), criarPedido);
+pedidoRoutes.get("/pedidos", listarPedidos);
+pedidoRoutes.post("/pedidos", validateSchema(pedidoSchema), criarPedido);
 
 export default pedidoRoutes;

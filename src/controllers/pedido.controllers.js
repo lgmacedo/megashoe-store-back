@@ -1,51 +1,17 @@
-import { ObjectId } from "mongodb";
 import db from "../database/database.connect.js";
+import { realizarBaixaDeProdutos } from "../database/database.services.js";
 
-function listarPedidos(req, res) {
+function listarPedidos(_, res) {
   res.send("Listando pedidos");
-}
-
-function quantidadeDeProdutosPorId(produtosDoPedido) {
-  const quantidadePorId = {};
-  produtosDoPedido.forEach((produto) => {
-    quantidadePorId[produto.idProduto] = produto.quantidadeSelecionada;
-  });
-  return quantidadePorId;
-}
-
-function checarQuantidadeAposBaixa(produtosNoEstoque, quantidadeComprada) {
-  const produtosAposBaixa = produtosNoEstoque.map((p) => ({ ...p }));
-  produtosAposBaixa.forEach((produto) => {
-    const qty = quantidadeComprada[produto._id];
-    produto.quantidade -= qty;
-    if (produto.quantidade < 0) {
-      return {
-        error: `Não há disponibilidade de ${qty} unidades de ${produto.nome}`,
-      };
-    }
-  });
-  return produtosAposBaixa;
 }
 
 async function criarPedido(req, res) {
   const { produtos } = req.body;
-  const quantidadeCompradaPorId = quantidadeDeProdutosPorId(produtos);
   try {
-    const objectIds = produtos.map(({ idProduto }) => new ObjectId(idProduto));
-    const produtosNoEstoque = await buscarProdutosComIds(objectIds);
-    const produtosAposBaixa = checarQuantidadeAposBaixa(
-      produtosNoEstoque,
-      quantidadeCompradaPorId
-    );
+    const houveBaixa = await realizarBaixaDeProdutos(produtos);
 
-    if (produtosAposBaixa.error) {
-      return res.status(401).send(produtosAposBaixa.error);
-    }
-
-    for (let { _id, quantidade } of produtosAposBaixa) {
-      await db
-        .collection("produtos")
-        .updateOne({ _id: new ObjectId(_id) }, { $set: { quantidade } });
+    if (!houveBaixa) {
+      return res.status(401).send("Quantidade de produtos indisponível");
     }
 
     const { insertedId } = await db.collection("pedidos").insertOne({
@@ -53,6 +19,7 @@ async function criarPedido(req, res) {
       criadoEm: Date.now(),
       produtos,
     });
+
     res.status(201).send(insertedId);
   } catch (err) {
     res.sendStatus(500);
