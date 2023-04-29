@@ -9,9 +9,12 @@ import { autentica } from "../middlewares/auth.middlewares.js";
 
 const pedidoRoutes = Router();
 
-pedidoRoutes.use(autentica);
-
-pedidoRoutes.get("/pedidos", listarPedidos);
-pedidoRoutes.post("/pedidos", validateSchema(pedidoSchema), criarPedido);
+pedidoRoutes.get("/pedidos", autentica, listarPedidos);
+pedidoRoutes.post(
+  "/pedidos",
+  autentica,
+  validateSchema(pedidoSchema),
+  criarPedido
+);
 
 export default pedidoRoutes;
