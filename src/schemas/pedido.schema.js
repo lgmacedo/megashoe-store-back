@@ -3,7 +3,7 @@ import { ObjectId } from "mongodb";
 
 function validarIdProduto(value) {
   if (!ObjectId.isValid(value)) throw Error("O id do produto é inválido");
-  return value;
+  return new ObjectId(value);
 }
 
 const pedidoProdutoSchema = Joi.object({

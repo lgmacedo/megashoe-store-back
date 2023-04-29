@@ -13,23 +13,53 @@ async function buscarProdutosComIds(objectIds) {
   }
 }
 
-async function realizarBaixaDeProdutos(produtos) {
-  try {
-    for (let { idProduto, quantidadeComprada } of produtos) {
-      await db.collection("produtos").updateOne(
-        {
-          _id: new ObjectId(idProduto),
-          quantidade: { $gte: quantidadeComprada },
-        },
-        { $inc: { quantidade: -quantidadeComprada } },
-        { upsert: true, session: session }
-      );
+async function checarEstoqueDeProdutos(produtosComprados) {
+  const produtosEmEstoque = await buscarProdutosComIds(
+    produtosComprados.map((p) => p.idProduto)
+  );
+
+  for (let produto of produtosComprados) {
+    const produtoNoEstoque = produtosEmEstoque.find((produtoEstoque) =>
+      produto.idProduto.equals(produtoEstoque._id)
+    );
+
+    if (produtoNoEstoque.quantidade < produto.quantidadeSelecionada) {
+      return {
+        error: `Quantidade indisponível de ${produtoNoEstoque.nome}`,
+      };
     }
-    return true;
+  }
+}
+
+async function realizarBaixaDeProduto(produto) {
+  try {
+    const { idProduto, quantidadeSelecionada } = produto;
+    return await db.collection("produtos").updateOne(
+      {
+        _id: idProduto,
+        quantidade: { $gte: quantidadeSelecionada },
+      },
+      { $inc: { quantidade: -quantidadeSelecionada } },
+      { upsert: true }
+    );
   } catch (err) {
-    console.log(err);
     throw Error(err.message);
   }
 }
 
-export { buscarProdutosComIds, realizarBaixaDeProdutos };
+async function realizarBaixaDeProdutos(produtos) {
+  try {
+    const promises = produtos.map(async (produto) => {
+      return realizarBaixaDeProduto(produto);
+    });
+    return await Promise.all(promises);
+  } catch (err) {
+    throw Error(err.message);
+  }
+}
+
+export {
+  buscarProdutosComIds,
+  realizarBaixaDeProdutos,
+  checarEstoqueDeProdutos,
+};
