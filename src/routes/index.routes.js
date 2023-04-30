@@ -1,11 +1,11 @@
-import {Router} from 'express';
-import authRoutes from './auth.routes.js';
-import productRoutes from './product.routes.js';
-import userRouter from './user.routes.js';
+import { Router } from "express";
+import produtoRoutes from "./produto.routes.js";
+import pedidoRoutes from "./pedido.routes.js";
+import userRouter from "./user.routes.js";
 
 const router = Router();
-router.use(authRoutes);
-router.use(productRoutes);
+router.use(produtoRoutes);
 router.use(userRouter);
+router.use(pedidoRoutes);
 
 export default router;

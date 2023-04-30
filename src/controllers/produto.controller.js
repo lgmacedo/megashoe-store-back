@@ -1,5 +1,6 @@
 import { ObjectId } from "mongodb";
 import db from "../database/database.connect.js";
+import { buscarProdutosComIds } from "../database/database.services.js";
 
 export async function getTodosProdutos(_, res) {
   try {
@@ -40,16 +41,13 @@ export async function checarDisponibilidadeProduto(req, res) {
 }
 
 export async function getProdutosComIds(req, res) {
-  const { ids } = req.body;
+  const { ids } = req.query;
   if (!Array.isArray(ids) || ids.length === 0) return res.sendStatus(422);
   const objectIds = ids
     .filter((id) => ObjectId.isValid(id))
     .map((id) => new ObjectId(id));
   try {
-    const produtos = await db
-      .collection("produtos")
-      .find({ _id: { $in: objectIds } })
-      .toArray();
+    const produtos = await buscarProdutosComIds(objectIds);
     res.send(produtos);
   } catch (err) {
     res.status(500).send("Erro inesperado. Tente novamente.");
