@@ -5,12 +5,31 @@ import {
   realizarBaixaDeProdutos,
 } from "../database/database.services.js";
 
+async function getPedido(req, res) {
+  const { idUsuario } = res.locals.sessao;
+  const { idPedido } = req.params;
+  try {
+    const pedido = await db
+      .collection("pedidos")
+      .findOne({ _id: new ObjectId(idPedido) });
+
+    if (!pedido.idUsuario.equals(idUsuario)) {
+      return res.sendStatus(401);
+    }
+
+    res.send(pedido);
+  } catch (err) {
+    console.log(err);
+    res.sendStatus(500);
+  }
+}
+
 async function listarPedidos(_, res) {
   const { idUsuario } = res.locals.sessao;
   try {
     const pedidos = await db
       .collection("pedidos")
-      .find({ _id: new ObjectId(idUsuario) })
+      .find({ idUsuario: new ObjectId(idUsuario) })
       .toArray();
     res.send(pedidos);
   } catch (err) {
@@ -24,7 +43,7 @@ async function criarPedido(req, res) {
   try {
     const disponibilidade = await checarEstoqueDeProdutos(produtos);
 
-    if (disponibilidade?.error) {
+    if (disponibilidade.error) {
       return res.status(401).send(disponibilidade.error);
     }
 
@@ -40,4 +59,4 @@ async function criarPedido(req, res) {
   }
 }
 
-export { listarPedidos, criarPedido };
+export { listarPedidos, criarPedido, getPedido };

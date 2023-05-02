@@ -25,10 +25,13 @@ async function checarEstoqueDeProdutos(produtosComprados) {
 
     if (produtoNoEstoque.quantidade < produto.quantidadeSelecionada) {
       return {
+        success: false,
         error: `Quantidade indisponível de ${produtoNoEstoque.nome}`,
       };
     }
   }
+
+  return { success: true, error: null };
 }
 
 async function realizarBaixaDeProduto(produto) {
