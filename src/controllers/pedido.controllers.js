@@ -2,6 +2,7 @@ import { ObjectId } from "mongodb";
 import db from "../database/database.connect.js";
 import {
   buscarPedido,
+  buscarPedidos,
   checarEstoqueDeProdutos,
   obterProdutosComDetalhes,
   realizarBaixaDeProdutos,
@@ -28,10 +29,13 @@ async function getPedido(req, res) {
 async function listarPedidos(_, res) {
   const { idUsuario } = res.locals.sessao;
   try {
-    const pedidos = await db
-      .collection("pedidos")
-      .find({ idUsuario: new ObjectId(idUsuario) })
-      .toArray();
+    const pedidos = await buscarPedidos(idUsuario);
+    if (!pedidos) return res.sendStatus(404);
+
+    for (let pedido of pedidos) {
+      pedido.produtos = await obterProdutosComDetalhes(pedido);
+    }
+
     res.send(pedidos);
   } catch (err) {
     res.sendStatus(500);

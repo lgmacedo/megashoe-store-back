@@ -31,6 +31,17 @@ async function buscarPedido(idPedido) {
   }
 }
 
+async function buscarPedidos(idUsuario) {
+  try {
+    return await db
+      .collection("pedidos")
+      .find({ idUsuario: new ObjectId(idUsuario) })
+      .toArray();
+  } catch (err) {
+    throw Error(err.message);
+  }
+}
+
 async function buscarProdutosComIds(objectIds) {
   try {
     const produtos = await db
@@ -97,4 +108,5 @@ export {
   checarEstoqueDeProdutos,
   buscarPedido,
   obterProdutosComDetalhes,
+  buscarPedidos,
 };
