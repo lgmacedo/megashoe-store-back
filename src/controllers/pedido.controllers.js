@@ -1,7 +1,9 @@
 import { ObjectId } from "mongodb";
 import db from "../database/database.connect.js";
 import {
+  buscarPedido,
   checarEstoqueDeProdutos,
+  obterProdutosComDetalhes,
   realizarBaixaDeProdutos,
 } from "../database/database.services.js";
 
@@ -9,13 +11,12 @@ async function getPedido(req, res) {
   const { idUsuario } = res.locals.sessao;
   const { idPedido } = req.params;
   try {
-    const pedido = await db
-      .collection("pedidos")
-      .findOne({ _id: new ObjectId(idPedido) });
+    const pedido = await buscarPedido(idPedido);
 
-    if (!pedido.idUsuario.equals(idUsuario)) {
-      return res.sendStatus(401);
-    }
+    if (!pedido) return res.sendStatus(404);
+    if (!pedido.idUsuario.equals(idUsuario)) return res.sendStatus(401);
+
+    pedido.produtos = await obterProdutosComDetalhes(pedido);
 
     res.send(pedido);
   } catch (err) {

@@ -1,6 +1,36 @@
 import { ObjectId } from "mongodb";
 import db from "./database.connect.js";
 
+async function obterProdutosComDetalhes(pedido) {
+  try {
+    const produtosDetalhes = await buscarProdutosComIds(
+      pedido.produtos.map((p) => new ObjectId(p.idProduto))
+    );
+
+    const detalhes = {};
+    produtosDetalhes.forEach((p) => (detalhes[p._id] = p));
+
+    return pedido.produtos.map((produto) => {
+      produto = { ...produto, ...detalhes[produto.idProduto] };
+      delete produto.idProduto;
+      delete produto.quantidade;
+      return produto;
+    });
+  } catch (err) {
+    throw Error(err.message);
+  }
+}
+
+async function buscarPedido(idPedido) {
+  try {
+    return await db
+      .collection("pedidos")
+      .findOne({ _id: new ObjectId(idPedido) });
+  } catch (err) {
+    throw Error(err.message);
+  }
+}
+
 async function buscarProdutosComIds(objectIds) {
   try {
     const produtos = await db
@@ -65,4 +95,6 @@ export {
   buscarProdutosComIds,
   realizarBaixaDeProdutos,
   checarEstoqueDeProdutos,
+  buscarPedido,
+  obterProdutosComDetalhes,
 };
