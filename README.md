@@ -1,3 +1,6 @@
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/MatheusW166/mega-shoestore-backend/blob/main/LICENCE)
+
 # MegaShoestore - Backend
 
 API utilizada no e-commerce MegaShoestore. Possui as funcionalidades básicas de um e-commerce:
@@ -144,3 +147,62 @@ GET /produtos/checar/:idProduto
 | `bool` | Indica se o produto está disponível ou não |
 
 <hr />
+
+### Listar pedidos
+
+```curl
+GET /pedidos
+```
+
+#### Requisição
+Nada
+
+#### Resposta
+| Tipo       | Descrição                                   |
+| :--------- | :------------------------------------------ |
+| `Array`<[Pedido](#pedido)> | Array dos pedidos do usuário |
+
+##### Pedido
+| Campo | Tipo       | Descrição                                   |
+| :---------- | :--------- | :------------------------------------------ |
+| `_id`      | `string` | ID do pedido |
+| `idUsuario`      | `string` | ID do usuário que fez o pedido |
+| `produtos`      | `Array`<[Produto](#produto)> | Produtos inclusos no pedido |
+| `criadoEm`      | `number` | Timestamp da criação |
+
+<hr/>
+
+### Obter pedido por ID
+```curl
+GET /pedidos/:idPedido
+```
+#### Requisição
+| Parâmetro | Tipo       | Descrição                                   |
+| :---------- | :--------- | :------------------------------------------ |
+| `idPedido`      | `string` | ID do pedido |
+
+#### Resposta
+| Tipo       | Descrição                                   |
+| :--------- | :------------------------------------------ |
+| [Pedido](#pedido)| Pedido encontrado |
+
+<hr/>
+
+### Criar pedido
+```curl
+POST /pedidos
+```
+
+#### Requisição
+| Body | Tipo       | Descrição                                   |
+| :---------- | :--------- | :------------------------------------------ |
+| `produtos`      | `Array`<[Item](#item)> | Array composto pelo id dos produtos e a quantidade |
+
+##### Item
+| Campo | Tipo       | Descrição                                   |
+| :---------- | :--------- | :------------------------------------------ |
+| `idProduto`      | `string` | ID do produto |
+| `quantidadeSelecionada`      | `number` | Quantidade selecionada pelo usuário |
+
+#### Resposta
+Nada
