@@ -1,7 +1,10 @@
 import { ObjectId } from "mongodb";
 import db from "../database/database.connect.js";
 import {
+  buscarPedido,
+  buscarPedidos,
   checarEstoqueDeProdutos,
+  obterProdutosComDetalhes,
   realizarBaixaDeProdutos,
 } from "../database/database.services.js";
 
@@ -9,13 +12,12 @@ async function getPedido(req, res) {
   const { idUsuario } = res.locals.sessao;
   const { idPedido } = req.params;
   try {
-    const pedido = await db
-      .collection("pedidos")
-      .findOne({ _id: new ObjectId(idPedido) });
+    const pedido = await buscarPedido(idPedido);
 
-    if (!pedido.idUsuario.equals(idUsuario)) {
-      return res.sendStatus(401);
-    }
+    if (!pedido) return res.sendStatus(404);
+    if (!pedido.idUsuario.equals(idUsuario)) return res.sendStatus(401);
+
+    pedido.produtos = await obterProdutosComDetalhes(pedido);
 
     res.send(pedido);
   } catch (err) {
@@ -27,10 +29,13 @@ async function getPedido(req, res) {
 async function listarPedidos(_, res) {
   const { idUsuario } = res.locals.sessao;
   try {
-    const pedidos = await db
-      .collection("pedidos")
-      .find({ idUsuario: new ObjectId(idUsuario) })
-      .toArray();
+    const pedidos = await buscarPedidos(idUsuario);
+    if (!pedidos) return res.sendStatus(404);
+
+    for (let pedido of pedidos) {
+      pedido.produtos = await obterProdutosComDetalhes(pedido);
+    }
+
     res.send(pedidos);
   } catch (err) {
     res.sendStatus(500);
