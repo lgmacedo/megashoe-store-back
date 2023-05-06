@@ -23,6 +23,12 @@ API utilizada no e-commerce MegaShoestore. Possui as funcionalidades básicas de
 - [@lgmacedo](https://github.com/lgmacedo)
 - [@aabenjamin](https://github.com/aabenjamim)
 
+## Modelo de dados
+
+<div align="center">
+  <img src="https://github.com/MatheusW166/mega-shoestore-backend/blob/main/refs/data-model.png" alt="Modelo" />
+</div>
+
 ## Endpoints
 
 ### Cadastro
