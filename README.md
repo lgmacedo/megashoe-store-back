@@ -104,6 +104,10 @@ Nada
 
 ### Listar produtos por IDs
 
+```curl
+GET /produtos/muitos
+```
+
 #### Requisição
 | Query   | Tipo       | Descrição                                   |
 | :---------- | :--------- | :------------------------------------------ |
