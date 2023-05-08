@@ -26,7 +26,7 @@ API utilizada no e-commerce MegaShoestore. Possui as funcionalidades básicas de
 ## Modelo de dados
 
 <div align="center">
-  <img src="https://github.com/MatheusW166/mega-shoestore-backend/blob/main/refs/data-model.png" alt="Modelo" />
+  <img src="https://github.com/MatheusW166/mega-shoestore-backend/blob/main/refs/modelo.png" alt="Modelo" />
 </div>
 
 ## Endpoints
@@ -103,6 +103,10 @@ Nada
 <hr />
 
 ### Listar produtos por IDs
+
+```curl
+GET /produtos/muitos
+```
 
 #### Requisição
 | Query   | Tipo       | Descrição                                   |
