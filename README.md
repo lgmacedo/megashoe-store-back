@@ -13,6 +13,29 @@ API utilizada no e-commerce MegaShoestore. Possui as funcionalidades básicas de
 - Controle de estoque
 - Registro de pedidos
 
+## Como rodar
+
+Primeiro, é necessário instalar todas as dependências necessárias para essa aplicação através do Node Package Manager:
+
+```bash
+$ npm install
+```
+
+Esse comando deve ser feito na raiz do projeto.
+
+Para rodar a aplicação:
+
+```bash
+# development
+$ npm run start
+
+# watch mode
+$ npm run start:dev
+
+# production mode
+$ npm run start:prod
+```
+
 ## Stack
 
 ![NodeJS](https://img.shields.io/badge/node.js-6DA55F?style=for-the-badge&logo=node.js&logoColor=white) ![NPM](https://img.shields.io/badge/NPM-%23CB3837.svg?style=for-the-badge&logo=npm&logoColor=white) ![Express.js](https://img.shields.io/badge/express.js-%23404d59.svg?style=for-the-badge&logo=express&logoColor=%2361DAFB) ![MongoDB](https://img.shields.io/badge/MongoDB-%234ea94b.svg?style=for-the-badge&logo=mongodb&logoColor=white) ![Render](https://img.shields.io/badge/Render-%46E3B7.svg?style=for-the-badge&logo=render&logoColor=white)
